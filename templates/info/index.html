@@ -1,0 +1,69 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>informes</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}"> -->
+    
+
+    <style>
+        input[type="file"]{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    {% block content %}
+
+    <div class="container">
+        <div class="row">
+            <legend>Subir informe</legend>
+            <form action="upload" method="post" enctype="multipart/form-data" id="upload" class="upload">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <label  class="file-upload btn btn-warning btn-block shadow">
+                            <i class="fa fa-upload mr-2"></i>
+                            Old File
+                            <input  type="file" name="old" required> 
+                        </label>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control-plaintext" name="oldmoth" placeholder="  Old Month name">
+                    </div>
+                    <small id="emailHelp" class="form-text text-muted">Add month name, if file month dont is old.</small>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <label class="file-upload btn btn-primary btn-block shadow">
+                            <i class="fa fa-upload mr-2"></i>
+                            New File
+                            <input type="file" name="new" required>
+                        </label>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" name="newmoth" class="form-control-plaintext" placeholder="  New Month Name">
+                    </div>
+                    <small id="emailHelp" class="form-text text-muted">Add month name, if file month dont is current.</small>
+                </div>
+                
+                    <button class="btn btn-success btn-lg" id="fileUploadbutton" type="submit" class="btn btn-md" style="color:white" value="Upload">
+                        <i class="fa fa-cloud-upload "></i>
+                        Upload
+                    </button>
+                
+            </form>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+
+</html>

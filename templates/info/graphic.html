@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>INFORME</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/timeline.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <script src="script/jquery-3.4.1.min.js"></script>
+<script src="script/highcharts.js"></script>
+<script src="script/exporting.js"></script>  -->
+      <style>
+    body {
+        background: #687281;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        box-sizing: border-box;
+    }
+
+    .highcharts-label {
+        opacity: 1 !important
+    }
+
+    .highcharts-tooltip {
+        opacity: 1 !important
+    }
+
+    .bg {
+        background: white;
+        margin-bottom: 10px;
+    }
+
+    header .page-header-title {
+        color: #0061f2;
+    }
+
+    .row .graphic {
+        border-radius: 5px !important;
+        -webkit-box-shadow: 4px 3px 5px 0px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: 4px 3px 5px 0px rgba(0, 0, 0, 0.75);
+        box-shadow: 4px 3px 5px 0px rgba(0, 0, 0, 0.75);
+        margin: 6px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="/" style="text-decoration:none;color:#7cb5ec;">
+            <h1 class="btn btn-primary btn-lg"><i class="fa fa-undo "></i> Return</h1>
+        </a>
+    </div>
+    <div class="container rounded bg">
+
+        <header>
+            <h1 class="page-header-title text-center"></h1>
+            <div class="page-header-subtitle text-center">DATABASE ORACLE GRAPHIC MONITORIG FOR <b>HTML</b> FILES.</div>
+        </header>
+
+        <div class="row">
+            <div id="SGA" class="col graphic"></div>
+            <div id="ESTADO_CONEXION" class="col graphic"></div>
+        </div>
+        <div class="row">
+            <div id="ESTADISTICAS_CONEXION" class="col graphic"></div>
+            <div id="TABLE_SPACE" class="col graphic"></div>
+        </div>
+        <div class="row">
+            <div id="DBSIZE" class="col graphic"></div>
+            <div id="HIT_RATIO" class="col graphic"></div>
+        </div>
+        <div class="row">
+            <div id="SHARED_SQL" class="col graphic"></div>
+            <div id="DDD" class="col graphic"></div>
+        </div>
+    </div>
+    <div class="container">
+        <a href="/" style="text-decoration:none;color:#7cb5ec;">
+            <h1 class="btn btn-primary btn-lg"><i class="fa fa-undo "></i> Return</h1>
+        </a>
+    </div>
+
+    <script>
+    {% if data %}
+        json = {{ data | safe }};
+    {% else %}
+        json = "";
+    {% endif %}
+
+
+    var EXP = false;
+    var timeE = 1;
+    DATAN = json["new"];
+    REP06 = DATAN["REP06"];
+    REP13 = DATAN["REP13"];
+    REP16 = DATAN["REP16"];
+    REP08 = DATAN["REP08"];
+    REP09 = DATAN["REP09"];
+    REP23 = DATAN["REP23"];
+    REP24 = DATAN["REP24"];
+    REP25 = DATAN["REP25"];
+    MONTH_N = DATAN["date"];
+
+    DATAO = json["old"];
+    REP06_ = DATAO["REP06"];
+    REP13_ = DATAO["REP13"];
+    REP16_ = DATAO["REP16"];
+    REP08_ = DATAO["REP08"];
+    REP09_ = DATAO["REP09"];
+    MONTH_O = DATAO["date"];
+    $("header h1").html(`<i class="fa fa-server">&nbsp;${json["servername"].toUpperCase()} </i>&nbsp;&nbsp;<i class="fa fa-database">&nbsp;${json["dbname"].toUpperCase()}</i>`);
+
+    var TOTAL = REP06["sum"][0],
+        MAX = 1;
+    SGA = [];
+
+    delete REP06["sum"];
+
+    for (let x in REP06) {
+        let i = parseInt(REP06[x][0]);
+        let j = parseInt(REP06_[x][0]);
+
+        MAX = MAX < i ? i : MAX;
+        MAX = MAX < j ? j : MAX;
+
+        SGA.push({ name: x, data: [j, i] });
+    }
+
+    MAX = MAX + ((70 / 100) * MAX);
+
+    Highcharts.chart('SGA', {
+        chart: {
+            type: 'bar',
+            events: {
+                load: function() {
+                    var ch = this;
+                    setTimeout(function() {
+                        if (EXP) ch.exportChart();
+                    }, 1);
+                }
+            }
+        },
+        title: {
+            text: 'TAMAÑO ASIGNADO AL SGA '
+        },
+        xAxis: {
+            categories: [MONTH_O, MONTH_N],
+        },
+        yAxis: {
+            min: 0,
+            max: MAX,
+            title: {
+                text: 'MB',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: 'MB'
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -10,
+            y: 40,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        series: SGA
+    });
+
+
+
+    MAX = 1;
+    EC = [];
+    timeE = timeE + 5;
+
+    for (let x in REP08) {
+        let i = parseInt(REP08[x][0]);
+        let j = parseInt(REP08_[x][0]);
+
+        MAX = MAX < i ? i : MAX;
+        MAX = MAX < j ? j : MAX;
+
+        EC.push({ name: x, data: [j, i] });
+    }
+
+
+    MAX = MAX + ((70 / 100) * MAX);
+    Highcharts.chart('ESTADO_CONEXION', {
+        chart: {
+            type: 'bar',
+            events: {
+                load: function() {
+                    var ch = this;
+                    setTimeout(function() {
+                        if (EXP) ch.exportChart();
+                    }, timeE);
+                }
+            }
+        },
+        title: {
+            text: 'ESTADO DE LAS CONEXIONES'
+        },
+        xAxis: {
+            categories: [MONTH_O, MONTH_N],
+        },
+        yAxis: {
+            min: 0,
+            max: MAX,
+            title: {
+                text: ' Cantidad',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        /*    tooltip: {
+                valueSuffix: ' MB'
+            },*/
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -10,
+            y: 40,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        series: EC
+    });
+
+
+    MAX = 1,
+        CESC = [],
+        BESC = [],
+        NESC = [];
+    timeE = timeE + 5;
+
+
+    for (let x in REP09) {
+        let i = parseInt(REP09[x][0]);
+        let j = parseInt(REP09_[x][0]);
+        MAX = MAX < i ? i : MAX;
+        MAX = MAX < j ? j : MAX;
+        NESC.push(x);
+        CESC.push(i)
+        BESC.push(j);
+    }
+
+    MAX = MAX + ((17 / 100) * MAX);
+
+    Highcharts.chart('ESTADISTICAS_CONEXION', {
+        chart: {
+            type: 'column',
+            events: {
+                load: function() {
+                    var ch = this;
+                    setTimeout(function() {
+                        if (EXP) ch.exportChart();
+                    }, timeE);
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        title: {
+            text: 'ESTADISTICAS DE USO DE LAS CONEXIONES '
+        },
+
+        xAxis: {
+            categories: NESC,
+            crosshair: true,
+            labels: {
+                style: {
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            allowDecimals: false,
+            max: MAX,
+            title: {
+                enabled: true,
+                text: '<b>Cantidad De Conexiones</b>',
+                style: {
+                    fontWeight: 'normal'
+                }
+            }
+            //tickInterval: 10,
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px;font-weight:bolder;color:#0095ff">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        shared: true,
+        exporting: {
+            enabled: true,
+            chartOptions: {
+                xAxis: {
+                    labels: {
+                        style: {
+                            fontSize: '12px'
+                        }
+                    },
+                },
+                yAxis: {
+                    labels: {
+                        style: {
+                            fontSize: '12px'
+                        }
+                    },
+                }
+            }
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: MONTH_O,
+            data: BESC,
+            //color: "#979da2",
+            dataLabels: {
+                align: 'center',
+                format: '{point.y:.0f}',
+                enabled: true,
+                style: {
+                    fontSize: '12px',
+                }
+            }
+
+        }, {
+            name: MONTH_N,
+            data: CESC,
+            //color: "#37c059",
+            dataLabels: {
+                align: 'center',
+                format: '{point.y:.0f}',
+                enabled: true,
+                /*            style: {
+                                fontSize: '7px',
+                            }*/
+            }
+
+        }]
+    });
+
+    var CM = [],
+        BM = [],
+        TS = [];
+    timeE = timeE + 5;
+
+    for (let x in REP16) {
+        let alert = "";
+        let i = 100 - parseFloat(REP16[x][0]);
+        let e = REP16_[x] ? REP16_[x][0] : 100;
+        let j = 100 - parseFloat(e);
+        alert = i >= 90 ? `<span style='color:red;font-weight:bold'>${x}</span>` : x;
+        CM.push(i)
+        BM.push(j);
+        TS.push(alert);
+    }
+
+    Highcharts.chart('TABLE_SPACE', {
+        chart: {
+            type: 'column',
+            events: {
+                load: function() {
+                    var ch = this;
+                    setTimeout(function() {
+                        if (EXP) ch.exportChart();
+                    }, timeE);
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        title: {
+            text: 'Espacio por TableSpace'
+        },
+        subtitle: {
+            text: "Database"
+        },
+
+        xAxis: {
+            categories: TS,
+            crosshair: true,
+            labels: {
+                style: {
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            max: 100,
+            tickInterval: 10,
+            title: {
+                text: 'Porcentaje de uso'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px;font-weight:bolder;color:#0095ff">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f}% USO</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        shared: true,
+        exporting: {
+            enabled: true,
+            chartOptions: {
+                xAxis: {
+                    labels: {
+                        style: {
+                            fontSize: '2px'
+                        }
+                    },
+                },
+                yAxis: {
+                    labels: {
+                        style: {
+                            fontSize: '2px'
+                        }
+                    },
+                }
+            }
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: MONTH_O,
+            data: BM,
+            color: "#979da2",
+
+        }, {
+            name: MONTH_N,
+            data: CM,
+            color: "#37c059",
+            dataLabels: {
+                align: 'center',
+                format: '{point.y:.1f}%',
+                enabled: true,
+                /*           style: {
+                               fontSize: '7px',
+                           }*/
+            }
+
+        }]
+    });
+
+    TOTAL = (REP13["sum"][0] / 1024).toFixed(2);
+    DBSIZE = [];
+    timeE = timeE + 5;
+    delete REP13["sum"];
+
+    for (let x in REP13) {
+        let i = parseInt(REP13[x][0]);
+        let ds = x.indexOf("\\") == -1 ? "/" : "\\";
+        let n = x.split(ds);
+        n = n[n.length - 1];
+        DBSIZE.push({ name: n, y: i });
+    }
+
+    Highcharts.chart('DBSIZE', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie',
+            events: {
+                load: function() {
+                    var ch = this;
+                    setTimeout(function() {
+                        if (EXP) ch.exportChart();
+                    }, timeE);
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        title: {
+            text: 'TAMAÑO DE LA BASE DE DATOS <b>'+json["dbname"].toUpperCase()+'</b>'
+        },
+        subtitle: {
+            text: `<b><span style='color:#0095ff;font-size:14px;'>${TOTAL} GB</span></b>`
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}:<span style="color:#0095ff">{point.y:.1f}MB</span></b>'
+                },
+                //showInLegend: true
+            }
+        },
+
+        series: [{
+            name: 'TAMAÑO BASE DE DATOS',
+            colorByPoint: true,
+            data: DBSIZE
+        }]
+    });
+
+    HIT_RATIO = []
+    for (x in REP23) {
+        i = parseFloat(REP23[x][0])
+        HIT_RATIO.push({ name: x, label: i });
+    }
+
+    Highcharts.chart('HIT_RATIO', {
+        chart: {
+            type: 'timeline'
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            visible: false
+        },
+        yAxis: {
+            visible: false
+        },
+        title: {
+            text: 'MONITOREO DEL CACHE HIT RATIO'
+        },
+        subtitle: {
+            text: ''
+        },
+        series: [{
+            data: HIT_RATIO
+        }]
+    });
+
+
+
+    SHARED_SQL = []
+    for (x in REP24) {
+        i = parseFloat(REP24[x][0])
+        SHARED_SQL.push({ name: x, label: i });
+    }
+
+    Highcharts.chart('SHARED_SQL', {
+        chart: {
+            type: 'timeline'
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            visible: false
+        },
+        yAxis: {
+            visible: false
+        },
+        title: {
+            text: 'MEMORIA CACHE DEL SHARED SQL AREA'
+        },
+        subtitle: {
+            text: ''
+        },
+        series: [{
+            data: SHARED_SQL
+        }]
+    });
+
+
+    DDD = []
+    for (x in REP25) {
+        i = parseFloat(REP25[x][0])
+        DDD.push({ name: x, label: i });
+    }
+
+    Highcharts.chart('DDD', {
+        chart: {
+            type: 'timeline'
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            visible: false
+        },
+        yAxis: {
+            visible: false
+        },
+        title: {
+            text: 'MEMORIA CACHE DEL DICCIONARIO DE DATOS'
+        },
+        subtitle: {
+            text: ''
+        },
+        series: [{
+            data: DDD
+        }]
+    });
+    </script>
+</body>
+
+</html>
