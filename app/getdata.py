@@ -69,7 +69,7 @@ class Info:
 		if os.path.exists(file):
 			with open(file,"r") as f:
 				
-				soup = BeautifulSoup(f.read(), "html.parser")
+				soup = BeautifulSoup(f.read().replace("\n", ""), "html.parser")
 				TABLE = soup.find_all('table',width="90%")
 
 				for x in REP:

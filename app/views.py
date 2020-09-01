@@ -41,7 +41,7 @@ def getdata(d):
 	N = d[0].split("\\")[-1]
 	DBNAME = N[N.find("_")+1:-5]
 	SERVERNAME=N.split("\\")
-	SERVERNAME=N[:N.find("_")-1]
+	SERVERNAME=N[:N.find("_")]
 	DATA.update({ "dbname" : DBNAME,"servername": SERVERNAME })
 	return DATA
 
