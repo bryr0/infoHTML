@@ -13,16 +13,15 @@ import json
 # Create your views here.
 
 def index(request):
-	#return HttpResponse("soy la pagina principal de la app adopcion")
 	if request.method == 'GET':
 		return render(request, 'info/index.html')
 
 		#private_storage = FileSystemStorage(location=path.join(settings.MEDIA_ROOT,"new"))
-def getdata(d):
+def getdata(fn):
 
 	REP = dict()
 	DATA = dict()
-	file = {"new":d[0],"old":d[1]}
+	file = {"new":fn[0],"old":fn[1]}
 	
 	REP.update({"REP16":[1,5]})
 	REP.update({"REP06":[1,2]})
@@ -38,7 +37,7 @@ def getdata(d):
 	for x in file:
 		DATA.update({ x: i.extract(os.path.join(x, file[x]),REP) })
 
-	N = d[0].split("\\")[-1]
+	N = fn[0].split("\\")[-1]
 	DBNAME = N[N.find("_")+1:-5]
 	SERVERNAME=N.split("\\")
 	SERVERNAME=N[:N.find("_")]
@@ -46,7 +45,7 @@ def getdata(d):
 	return DATA
 
 def upload(request):
-	print(request.FILES['new'])
+	#print(request.FILES['new'])
 	if request.method == 'POST' and request.FILES['old'] and request.FILES['new']:
 		
 		d = []

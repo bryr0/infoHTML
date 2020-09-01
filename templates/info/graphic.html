@@ -394,7 +394,7 @@
     for (let x in REP16) {
         let alert = "";
         let i = 100 - parseFloat(REP16[x][0]);
-        let e = REP16_[x] ? REP16_[x][0] : 100;
+        let e = REP16[x] ? REP16[x][0] : 100;
         let j = 100 - parseFloat(e);
         alert = i >= 90 ? `<span style='color:red;font-weight:bold'>${x}</span>` : x;
         CM.push(i)

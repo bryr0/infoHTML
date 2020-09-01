@@ -49,7 +49,8 @@ class Info:
 					row = []
 					for n in Rows:
 						if c == n-1:
-							row.append(TableRow[c].text.strip().replace(",",""))
+							if TableRow[c].text.strip():
+								row.append(TableRow[c].text.strip().replace(",",""))
 					if row:
 						if KEYS:
 							data.update({ KEYS[c].strip() : row})
