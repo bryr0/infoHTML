@@ -114,6 +114,15 @@
     MONTH_O = DATAO["date"];
     $("header h1").html(`<i class="fa fa-server">&nbsp;${json["servername"].toUpperCase()} </i>&nbsp;&nbsp;<i class="fa fa-database">&nbsp;${json["dbname"].toUpperCase()}</i>`);
 
+    function bytesToSize(bytes, separator = '', postFix = '') {
+        if (bytes) {
+            const sizes = [ 'MB', 'GB', 'TB'];
+            const i = Math.min(parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10), sizes.length - 1);
+            return `${(bytes / (1024 ** i)).toFixed(i ? 1 : 0)}${separator}${sizes[i]}${postFix}`;
+        }
+        return 'n/a';
+    }
+
     var TOTAL = REP06["sum"][0],
         MAX = 1;
     SGA = [];
@@ -496,7 +505,7 @@
         }]
     });
 
-    TOTAL = (REP13["sum"][0] / 1024).toFixed(2);
+    TOTAL = bytesToSize(REP13["sum"][0]," ");
     DBSIZE = [];
     timeE = timeE + 5;
     delete REP13["sum"];
@@ -531,7 +540,7 @@
             text: 'TAMAÑO DE LA BASE DE DATOS <b>'+json["dbname"].toUpperCase()+'</b>'
         },
         subtitle: {
-            text: `<b><span style='color:#0095ff;font-size:14px;'>${TOTAL} GB</span></b>`
+            text: `<b><span style='color:#0095ff;font-size:14px;'>${TOTAL}</span></b>`
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
