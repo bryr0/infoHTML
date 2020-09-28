@@ -570,11 +570,13 @@
     delete REP13["sum"];
 
     for (let x in REP13) {
-        let i = parseInt(REP13[x][0]);
+        //let i = parseInt(REP13[x][0]);
         let ds = x.indexOf("\\") == -1 ? "/" : "\\";
         let n = x.split(ds);
         n = n[n.length - 1];
-        DBSIZE.push({ name: n, y: i });
+        console.log(REP13[x][0],bytesToSize(REP13[x][0],""));
+        sizen = bytesToSize(REP13[x][0],"")
+        DBSIZE.push({ name: n, y: parseFloat(sizen),prefix: sizen.slice(-2)  });
     }
     VARTEST="";
     Highcharts.chart('DBSIZE', {
@@ -618,7 +620,7 @@
                 cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
-                    format: '<b>{point.name}:<span style="color:#0095ff">{point.y:.1f}MB</span></b>'
+                    format: '<b>{point.name}:<span style="color:#0095ff">{point.y:.1f}{point.prefix}</span></b>'
                 },
                 //showInLegend: true
             }
