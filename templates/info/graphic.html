@@ -17,15 +17,6 @@
     <script src="https://code.highcharts.com/modules/lollipop.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- <script src="script/jquery-3.4.1.min.js"></script>
-<script src="script/highcharts.js"></script>
-<script src="script/exporting.js"></script>
-
-
-.fa-database:before{content:"\f1c0"}.fa-file-pdf-o:before{content:"\f1c1"}
-
-
--->
       <style>
     body {
         background: #687281;
@@ -370,9 +361,6 @@
         subtitle: {
         	text: 'ESTADISTICAS DE USO DE LAS CONEXIONES '
     	},
-/*    	exporting: {
-		    filename: 'ESTADISTICAS DE USO DE LAS CONEXIONES ',
-		},*/
         xAxis: {
             categories: NESC,
             crosshair: true,
@@ -452,9 +440,6 @@
                 align: 'center',
                 format: '{point.y:.0f}',
                 enabled: true,
-                /*            style: {
-                                fontSize: '7px',
-                            }*/
             }
 
         }]
@@ -564,9 +549,9 @@
                 align: 'center',
                 format: '{point.y:.1f}%',
                 enabled: true,
-                /*           style: {
-                               fontSize: '7px',
-                           }*/
+               style: {
+                   fontSize: '7px',
+               }
             }
 
         }]
@@ -585,7 +570,7 @@
         
         sizen = bytesToSize(i,"")
         console.log(bytesToSize(REP13[x][0],""));
-        DBSIZE.push({ name: n.slice(0,-4), y: i/*parseFloat(sizen)*/, size : parseFloat(sizen),prefix: sizen.slice(-2)  });
+        DBSIZE.push({ name: n.slice(0,-4), y: i, size : parseFloat(sizen),prefix: sizen.slice(-2)  });
     }
 
     Highcharts.chart('DBSIZE', {
@@ -617,7 +602,19 @@
 
     	exporting: {
     		allowHTML: true,
+            sourceWidth: 1200,
+            sourceHeight: 1200,
+            style:{fontSize:'14px'},
 		    filename: `TAMAÑO DE LA BASE DE DATOS`,
+            chartOptions: {
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            style:{fontSize:'14px'},
+                        }
+                    }
+                }
+            }
 		},
 
         tooltip: {
@@ -628,9 +625,9 @@
                 allowPointSelect: true,
                 cursor: 'pointer',
                 dataLabels: {
-                    style:{fontSize:'8px'},
+                    style:{fontSize:'7px'},
                     enabled: true,
-                    format: '{point.name}:<b><span style="color:#0095ff">{point.size:.1f}{point.prefix}</span></b>'
+                    format: '{point.name}:<b><span style="color:#8B0000">{point.size:.1f}{point.prefix}</span></b>'
                 },
                 //showInLegend: true
             }
