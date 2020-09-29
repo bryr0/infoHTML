@@ -8,8 +8,13 @@
     <title>INFORME</title>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/cylinder.js"></script>
     <script src="http://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/timeline.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/dumbbell.js"></script>
+    <script src="https://code.highcharts.com/modules/lollipop.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- <script src="script/jquery-3.4.1.min.js"></script>
@@ -80,6 +85,9 @@
             <h1 class="page-header-title text-center"></h1>
             <div class="page-header-subtitle text-center">DATABASE ORACLE GRAPHIC MONITORIG FOR <b>HTML</b> FILES.</div>
         </header>
+         <div class="row">
+            <div id="container" class="col graphic"></div>
+        </div>
 
         <div class="row">
             <div id="SGA" class="col graphic"></div>
@@ -488,7 +496,7 @@
             text:TITLE,      
         },
         subtitle: {
-        	text: 'Espacio por TableSpace'
+        	text: 'Espacio por TableSpace'.toUpperCase()
     	},
         xAxis: {
             categories: TS,
@@ -519,7 +527,7 @@
         exporting: {
         	allowHTML: true,
             enabled: true,
-            filename: 'Espacio por TableSpace',
+            filename: 'Espacio por TableSpace'.toUpperCase(),
             chartOptions: {
                 xAxis: {
                     labels: {
@@ -570,15 +578,16 @@
     delete REP13["sum"];
 
     for (let x in REP13) {
-        //let i = parseInt(REP13[x][0]);
+        let i = parseFloat(REP13[x][0]);
         let ds = x.indexOf("\\") == -1 ? "/" : "\\";
         let n = x.split(ds);
         n = n[n.length - 1];
-        console.log(REP13[x][0],bytesToSize(REP13[x][0],""));
-        sizen = bytesToSize(REP13[x][0],"")
-        DBSIZE.push({ name: n, y: parseFloat(sizen),prefix: sizen.slice(-2)  });
+        
+        sizen = bytesToSize(i,"")
+        console.log(bytesToSize(REP13[x][0],""));
+        DBSIZE.push({ name: n.slice(0,-4), y: i/*parseFloat(sizen)*/, size : parseFloat(sizen),prefix: sizen.slice(-2)  });
     }
-    VARTEST="";
+
     Highcharts.chart('DBSIZE', {
         chart: {
             plotBackgroundColor: null,
@@ -619,15 +628,16 @@
                 allowPointSelect: true,
                 cursor: 'pointer',
                 dataLabels: {
+                    style:{fontSize:'8px'},
                     enabled: true,
-                    format: '<b>{point.name}:<span style="color:#0095ff">{point.y:.1f}{point.prefix}</span></b>'
+                    format: '{point.name}:<b><span style="color:#0095ff">{point.size:.1f}{point.prefix}</span></b>'
                 },
                 //showInLegend: true
             }
         },
 
         series: [{
-            name: 'TAMAÑO BASE DE DATOS',
+            name: '',
             colorByPoint: true,
             data: DBSIZE
         }]
