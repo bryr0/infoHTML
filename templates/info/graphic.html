@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-
 <head>
     <meta charset="UTF-8">
     <title>INFORME</title>
@@ -17,7 +15,7 @@
     <script src="https://code.highcharts.com/modules/lollipop.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-      <style>
+    <style>
     body {
         background: #687281;
         padding-top: 10px;
@@ -49,18 +47,19 @@
         box-shadow: 4px 3px 5px 0px rgba(0, 0, 0, 0.75);
         margin: 6px;
     }
-    svg{
-    	margin-top:-5px;
+
+    svg {
+        margin-top: -5px;
     }
 
 
-    header > h1 >span > svg {
-    	margin-top: -10px !important;
-    	width:35px !important;
-    	height:35px !important;
+    header>h1>span>svg {
+        margin-top: -10px !important;
+        width: 35px !important;
+        height: 35px !important;
     }
 
-    /*svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%;} */ 
+    /*svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%;} */
     </style>
 </head>
 
@@ -71,15 +70,10 @@
         </a>
     </div>
     <div class="container rounded bg">
-
         <header>
             <h1 class="page-header-title text-center"></h1>
             <div class="page-header-subtitle text-center">DATABASE ORACLE GRAPHIC MONITORIG FOR <b>HTML</b> FILES.</div>
         </header>
-         <div class="row">
-            <div id="container" class="col graphic"></div>
-        </div>
-
         <div class="row">
             <div id="SGA" class="col graphic"></div>
             <div id="ESTADO_CONEXION" class="col graphic"></div>
@@ -102,14 +96,12 @@
             <h1 class="btn btn-primary btn-lg"><i class="fa fa-undo "></i> Return</h1>
         </a>
     </div>
-
     <script>
-
-    {% if data %}
-        json = {{ data | safe }};
-    {% else %}
+    { % if data % }
+        json = { { data | safe } };
+    { % else %}
         json = "";
-    {% endif %}
+    { % endif % }
 
 
     var EXP = false;
@@ -141,7 +133,7 @@
 
     function bytesToSize(bytes, separator = '', postFix = '') {
         if (bytes) {
-            const sizes = [ 'MB', 'GB', 'TB'];
+            const sizes = ['MB', 'GB', 'TB'];
             const i = Math.min(parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10), sizes.length - 1);
             return `${(bytes / (1024 ** i)).toFixed(i ? 1 : 0)}${separator}${sizes[i]}${postFix}`;
         }
@@ -181,17 +173,17 @@
             }
         },
         title: {
-        	useHTML: true,
-            text:TITLE,
-            
+            useHTML: true,
+            text: TITLE,
+
         },
         subtitle: {
-        	text: 'TAMAÑO ASIGNADO AL SGA'
-    	},
-    	exporting: {
-    		allowHTML: true,
-		    filename: 'TAMAÑO ASIGNADO AL SGA',
-		},
+            text: 'TAMAÑO ASIGNADO AL SGA'
+        },
+        exporting: {
+            allowHTML: true,
+            filename: 'TAMAÑO ASIGNADO AL SGA',
+        },
 
         xAxis: {
             categories: [MONTH_O, MONTH_N],
@@ -265,17 +257,17 @@
             }
         },
         title: {
-        	useHTML: true,
-            text:TITLE,
-            
+            useHTML: true,
+            text: TITLE,
+
         },
         subtitle: {
-        	text: 'ESTADO DE LAS CONEXIONES'
-    	},
-    	exporting: {
-    		allowHTML: true,
-		    filename: 'ESTADO DE LAS CONEXIONES',
-		},
+            text: 'ESTADO DE LAS CONEXIONES'
+        },
+        exporting: {
+            allowHTML: true,
+            filename: 'ESTADO DE LAS CONEXIONES',
+        },
         xAxis: {
             categories: [MONTH_O, MONTH_N],
         },
@@ -354,13 +346,13 @@
         },
 
         title: {
-        	useHTML: true,
-            text:TITLE,
-            
+            useHTML: true,
+            text: TITLE,
+
         },
         subtitle: {
-        	text: 'ESTADISTICAS DE USO DE LAS CONEXIONES '
-    	},
+            text: 'ESTADISTICAS DE USO DE LAS CONEXIONES '
+        },
         xAxis: {
             categories: NESC,
             crosshair: true,
@@ -477,12 +469,12 @@
             enabled: false
         },
         title: {
-        	useHTML: true,
-            text:TITLE,      
+            useHTML: true,
+            text: TITLE,
         },
         subtitle: {
-        	text: 'Espacio por TableSpace'.toUpperCase()
-    	},
+            text: 'Espacio por TableSpace'.toUpperCase()
+        },
         xAxis: {
             categories: TS,
             crosshair: true,
@@ -510,7 +502,7 @@
         },
         shared: true,
         exporting: {
-        	allowHTML: true,
+            allowHTML: true,
             enabled: true,
             filename: 'Espacio por TableSpace'.toUpperCase(),
             chartOptions: {
@@ -549,15 +541,15 @@
                 align: 'center',
                 format: '{point.y:.1f}%',
                 enabled: true,
-               style: {
-                   fontSize: '7px',
-               }
+                style: {
+                    fontSize: '7px',
+                }
             }
 
         }]
     });
 
-    TOTAL = bytesToSize(REP13["sum"][0]," ");
+    TOTAL = bytesToSize(REP13["sum"][0], " ");
     DBSIZE = [];
     timeE = timeE + 5;
     delete REP13["sum"];
@@ -567,10 +559,10 @@
         let ds = x.indexOf("\\") == -1 ? "/" : "\\";
         let n = x.split(ds);
         n = n[n.length - 1];
-        
-        sizen = bytesToSize(i,"")
-        console.log(bytesToSize(REP13[x][0],""));
-        DBSIZE.push({ name: n.slice(0,-4), y: i, size : parseFloat(sizen),prefix: sizen.slice(-2)  });
+
+        sizen = bytesToSize(i, "")
+        console.log(bytesToSize(REP13[x][0], ""));
+        DBSIZE.push({ name: n.slice(0, -4), y: i, size: parseFloat(sizen), prefix: sizen.slice(-2) });
     }
 
     Highcharts.chart('DBSIZE', {
@@ -593,29 +585,29 @@
         },
 
         title: {
-        	useHTML: true,
-            text:TITLE,      
+            useHTML: true,
+            text: TITLE,
         },
         subtitle: {
-        	text: `TAMAÑO DE LA BASE DE DATOS<br><b><span style='color:#6610f2;font-size:18px;font-weight:900;'>${TOTAL}</span></b>`
-    	},
+            text: `TAMAÑO DE LA BASE DE DATOS<br><b><span style='color:#6610f2;font-size:18px;font-weight:900;'>${TOTAL}</span></b>`
+        },
 
-    	exporting: {
-    		allowHTML: true,
+        exporting: {
+            allowHTML: true,
             sourceWidth: 1200,
             sourceHeight: 1200,
-            style:{fontSize:'14px'},
-		    filename: `TAMAÑO DE LA BASE DE DATOS`,
+            style: { fontSize: '14px' },
+            filename: `TAMAÑO DE LA BASE DE DATOS`,
             chartOptions: {
                 plotOptions: {
                     pie: {
                         dataLabels: {
-                            style:{fontSize:'14px'},
+                            style: { fontSize: '14px' },
                         }
                     }
                 }
             }
-		},
+        },
 
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -625,7 +617,7 @@
                 allowPointSelect: true,
                 cursor: 'pointer',
                 dataLabels: {
-                    style:{fontSize:'7px'},
+                    style: { fontSize: '7px' },
                     enabled: true,
                     format: '{point.name}:<b><span style="color:#8B0000">{point.size:.1f}{point.prefix}</span></b>'
                 },
@@ -660,16 +652,16 @@
             visible: false
         },
         title: {
-        	useHTML: true,
-            text:TITLE,      
+            useHTML: true,
+            text: TITLE,
         },
         subtitle: {
-        	text: 'MONITOREO DEL CACHE HIT RATIO'
-    	},
-    	exporting: {
-    		allowHTML: true,
-		    filename: 'MONITOREO DEL CACHE HIT RATIO'
-		},
+            text: 'MONITOREO DEL CACHE HIT RATIO'
+        },
+        exporting: {
+            allowHTML: true,
+            filename: 'MONITOREO DEL CACHE HIT RATIO'
+        },
         series: [{
             data: HIT_RATIO
         }]
@@ -697,16 +689,16 @@
             visible: false
         },
         title: {
-        	useHTML: true,
-            text:TITLE,      
+            useHTML: true,
+            text: TITLE,
         },
         subtitle: {
-        	 text: 'MEMORIA CACHE DEL SHARED SQL AREA'
-    	},
-    	exporting: {
-    		allowHTML: true,
-		    filename: 'MEMORIA CACHE DEL SHARED SQL AREA',
-		},
+            text: 'MEMORIA CACHE DEL SHARED SQL AREA'
+        },
+        exporting: {
+            allowHTML: true,
+            filename: 'MEMORIA CACHE DEL SHARED SQL AREA',
+        },
         series: [{
             data: SHARED_SQL
         }]
@@ -733,16 +725,16 @@
             visible: false
         },
         title: {
-        	useHTML: true,
-            text:TITLE,      
+            useHTML: true,
+            text: TITLE,
         },
         subtitle: {
-        	text: 'MEMORIA CACHE DEL DICCIONARIO DE DATOS'
-    	},
-    	exporting: {
-    		allowHTML: true,
-		    filename: 'MEMORIA CACHE DEL DICCIONARIO DE DATOS',
-		},
+            text: 'MEMORIA CACHE DEL DICCIONARIO DE DATOS'
+        },
+        exporting: {
+            allowHTML: true,
+            filename: 'MEMORIA CACHE DEL DICCIONARIO DE DATOS',
+        },
         series: [{
             data: DDD
         }]
